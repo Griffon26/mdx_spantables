@@ -196,11 +196,7 @@ class SpanTableProcessor(BlockProcessor):
         while i < len(row):
             letter = row[i]
             if letter == marker:
-                if current != '' or len(elements) == 0:
-                    # Don't append empty string unless it is the first element
-                    # The border is already removed when we get the row, then the line is strip()'d
-                    # If the first element is a marker, then we have an empty first cell
-                    elements.append(current)
+                elements.append(current)
                 current = ''
             else:
                 match = backtick_pattern.getCompiledRegExp().match(row[i:])
