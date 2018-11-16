@@ -184,4 +184,57 @@ class TestSpanTableProcessor(unittest.TestCase):
         )
         self.assertMultiLineEqual(actual, expected)
 
+    def test_run_table_with_rowspan_stops_at_first_nonempty_cell(self):
+        parent = etree.Element('parent')
+        self.proc.run(parent, [
+            '| head         |\n'
+            '| ------------ |\n'
+            '| regular cell |\n'
+            '| span 2 rows  |\n'
+            '|_             |'
+        ])
+        actual = self.element_to_table(parent)
+        expected = (
+            '1x1\n'
+            '1x1\n'
+            '1x2\n'
+        )
+        self.assertMultiLineEqual(actual, expected)
+
+    def test_run_table_with_rowspan_limited_by_end_of_previous_rowspan(self):
+        parent = etree.Element('parent')
+        self.proc.run(parent, [
+            '| head        |\n'
+            '| ----------- |\n'
+            '| span 2 rows |\n'
+            '|_            |\n'
+            '|             |\n'
+            '|_            |'
+        ])
+        actual = self.element_to_table(parent)
+        expected = (
+            '1x1\n'
+            '1x2\n'
+            '1x2\n'
+        )
+        self.assertMultiLineEqual(actual, expected)
+
+    def test_run_table_with_rowspan_limited_by_row_with_other_colspan(self):
+        parent = etree.Element('parent')
+        self.proc.run(parent, [
+            '|             |            |\n'
+            '| ----------- | ---------- |\n'
+            '| not included in rowspan ||\n'
+            '| span 2 rows |            |\n'
+            '|_            |            |'
+        ])
+        actual = self.element_to_table(parent)
+        expected = (
+            '1x1 1x1\n'
+            '2x1\n'
+            '1x2 1x1\n'
+            '1x1\n'
+        )
+        self.assertMultiLineEqual(actual, expected)
+
 
