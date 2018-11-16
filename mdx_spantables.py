@@ -63,7 +63,8 @@ class SpanTableProcessor(BlockProcessor):
                 x = 0
                 for td in cols:
 
-                    colspan = int(td.get('colspan', default='1'))
+                    colspan_str = td.get('colspan')
+                    colspan = int(colspan_str) if colspan_str else 1
 
                     # Insert the td together with its parent
                     table_cells[(x, y)] = (tr, td)
@@ -161,7 +162,8 @@ class SpanTableProcessor(BlockProcessor):
             # No text after split indicates colspan
             if text == None:
                 if c is not None:
-                    colspan = int(c.get('colspan', default='1'))
+                    colspan_str = c.get('colspan')
+                    colspan = int(colspan_str) if colspan_str else 1
                     c.set('colspan', str(colspan + 1))
                 else:
                     # if this is the first cell, then fall back to creating an empty cell

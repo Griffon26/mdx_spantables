@@ -2,7 +2,7 @@
 Extension for python-markdown allowing cells in tables to span multiple rows or columns
 
 This is a slightly modified version of the tables extension that comes with
-python-markdown.
+[python-markdown](https://github.com/Python-Markdown/markdown).
 
 To span cells across multiple columns make sure the cells end with multiple
 consecutive vertical bars. To span cells across rows fill the cell on the last
